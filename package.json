@@ -1,11 +1,12 @@
 {
-  "name": "ejs-vuw-test",
+  "name": "buildsystem",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/petamoriken/ejs-vuw-test",
+  "repository": "https://github.com/petamoriken/buildsystem",
   "author": "petamoriken <moriken@kimamass.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^7.1.1",
     "eslint": "^3.11.1",
     "gulp": "^3.9.1",
     "gulp-foreach": "^0.1.0",
@@ -15,6 +16,7 @@
     "gulp-ejs": "^2.2.1"
   },
   "scripts": {
-    "ejs": "gulp ejs"
+    "ejs": "gulp ejs",
+    "clean": "rm -rf build"
   }
 }

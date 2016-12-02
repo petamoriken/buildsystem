@@ -1,4 +1,4 @@
-# EJS + VueJS test
+# Build System
 
 1. `yarn`
 2. `yarn run ejs`
