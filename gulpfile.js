@@ -3,30 +3,27 @@ const path = require("path");
 const gulp = require("gulp");
 const $ = require("gulp-load-plugins")();
 
-gulp.task("ejs", ["ejs_ja", "ejs_en"]);
+const target = process.env.NODE_ENV || "development";
 
-gulp.task("ejs_ja", function() {
-    return gulp.src("src/pages/**/*.ejs")
-        .pipe($.foreach((stream, file) => {
-            const base = path.join(file.path, "../");
-            file.base = base;
+// ejs
+{
+    const counties = ["ja", "en"];
 
-            const data = require( path.join(base, "ja.json") );
-            data.lang = "ja";
+    gulp.task("ejs", counties.map(val => `ejs_${ val }`));
 
-            return stream.pipe($.ejs(data, {ext: ".html"}))
-        })).pipe(gulp.dest("build/"));
-});
+    // ejs_ja, ejs_en
+    for(const country of counties) {
+        gulp.task(`ejs_${ country }`, () => {
+            return gulp.src("src/pages/**/*.ejs")
+                .pipe($.foreach((stream, file) => {
+                    const base = path.join(file.path, "../");
+                    file.base = base;
 
-gulp.task("ejs_en", function() {
-    return gulp.src("src/pages/**/*.ejs")
-        .pipe($.foreach((stream, file) => {
-            const base = path.join(file.path, "../");
-            file.base = base;
+                    const data = require( path.join(base, `${ country }.json`) );
+                    data.lang = country;
 
-            const data = require( path.join(base, "en.json") );
-            data.lang = "en";
-
-            return stream.pipe($.ejs(data, {ext: ".html"}))
-        })).pipe(gulp.dest("build/en/"));
-});
+                    return stream.pipe($.ejs(data, {ext: ".html"}));
+                })).pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "" : country + "/" }`));
+        });
+    }
+}
