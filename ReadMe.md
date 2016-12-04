@@ -1,6 +1,6 @@
 # Build System
 
 1. `yarn`
-2. `yarn run gulp`
+2. `yarn run build`
 
 -> create `build/` directory and files!
