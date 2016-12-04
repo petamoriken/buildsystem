@@ -1,5 +1,16 @@
-<% include ../../components/static/head.ejs %>
+<!DOCTYPE html>
+<html lang="<%= process.env.LANG %>">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <%= helloText %>
 
-<%= helloText %>
-
-<% include ../../components/static/foot.ejs %>
+    <!-- Vue test component -->
+    <div id="app">
+        <test-component msg="<%= process.env.LOCATION === 'ja' ? 'やあ' : 'Hi!' %>"></test-component>
+    </div>
+    <script src="js/index.js"></script>
+</body>
+</html>
