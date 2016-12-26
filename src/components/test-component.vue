@@ -3,8 +3,11 @@
 </template>
 
 <style scoped>
+    /* root からの相対パスで書く */
+    @import "src/setting";
+
     .red {
-        color: #f00;
+        color: var(--myColor);
     }
 </style>
 

@@ -25,7 +25,6 @@ const target = process.env.NODE_ENV === "production" ? "release" : "debug";
 const countries = ["ja", "en"];
 
 
-
 // html_ja, html_en
 for(const country of countries) {
     gulp.task(`html_${ country }`, () => {
@@ -52,8 +51,14 @@ gulp.task("html", gulp.parallel( ...countries.map(val => `html_${ val }`) ));
 
 // js_ja, js_en
 for(const country of countries) {
-    gulp.task(`js_${ country }`, () => {
+    gulp.task(`js_${ country }`, async () => {
         const debug = target === "debug";
+
+        // vueify config
+        const postcssConfig = await fetchPostcssConfig();
+        vueify.compiler.applyConfig({
+            postcss: postcssConfig.plugins
+        });
 
         return gulp.src("src/pages/*/js/*.js")
             .pipe($.foreach((stream, file) => {
