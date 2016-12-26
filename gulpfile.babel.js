@@ -1,19 +1,29 @@
+// polyfill
+require("babel-polyfill");
+
 const path = require("path");
 
-const source = require("vinyl-source-stream");
-const buffer = require("vinyl-buffer");
-
+// gulp
 const gulp = require("gulp");
 const $ = require("gulp-load-plugins")();
 
+// postcss
+const fetchPostcssConfig = require("postcss-load-plugins");
+
+// browserify
 const browserify = require("browserify");
 const vueify = require("vueify");
 const envify = require("envify/custom");
 
-if(!process.env.NODE_ENV) process.env.NODE_ENV = "development";
+const source = require("vinyl-source-stream");
+const buffer = require("vinyl-buffer");
 
+// setting
+if(!process.env.NODE_ENV) process.env.NODE_ENV = "development";
 const target = process.env.NODE_ENV === "production" ? "release" : "debug";
+
 const countries = ["ja", "en"];
+
 
 
 // html_ja, html_en
@@ -31,12 +41,13 @@ for(const country of countries) {
                 Object.assign(env, process.env, { LOCATION: country });
 
                 return stream.pipe($.ejs(data, {ext: ".html"}));
-            })).pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "" : country + "/" }`));
+            })).pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "." : country }`));
     });
 }
 
 // html (ejs)
 gulp.task("html", gulp.parallel( ...countries.map(val => `html_${ val }`) ));
+
 
 
 // js_ja, js_en
@@ -59,7 +70,7 @@ for(const country of countries) {
             .pipe($.uglify({ compress: true }))
             .pipe($.optimizeJs())
             .pipe($.if( debug, $.sourcemaps.write("./") ))
-            .pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "" : country + "/" }/js/`));
+            .pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "." : country }/js`));
     });
 }
 
@@ -67,5 +78,21 @@ for(const country of countries) {
 gulp.task("js", gulp.parallel( ...countries.map(val => `js_${ val }`) ));
 
 
+
+// css (postcss)
+gulp.task("css", async () => {
+    const postcssConfig = await fetchPostcssConfig();
+
+    let stream = gulp.src("src/pages/*/css/*.css")
+        .pipe($.postcss(postcssConfig.plugins))
+        .pipe($.flatten());
+    
+    for(const country of countries) {
+        stream = stream.pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "." : country }/css`));
+    }
+});
+
+
+
 // all build
-gulp.task("default", gulp.parallel("html", "js"));
+gulp.task("default", gulp.parallel("html", "js", "css"));

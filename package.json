@@ -7,17 +7,25 @@
   "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^7.1.1",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-register": "^6.18.0",
     "browserify": "^13.1.1",
     "envify": "^4.0.0",
     "eslint": "^3.11.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-ejs": "^2.2.1",
+    "gulp-flatten": "^0.3.1",
     "gulp-foreach": "^0.1.0",
     "gulp-if": "^2.0.2",
     "gulp-load-plugins": "^1.4.0",
     "gulp-optimize-js": "^1.1.0",
+    "gulp-postcss": "^6.2.0",
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-import": "^9.0.0",
+    "postcss-load-plugins": "^2.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vue": "^2.1.4",
@@ -32,6 +40,7 @@
     "task": "gulp -T",
     "html": "gulp html",
     "js": "gulp js",
+    "css": "gulp css",
     "clean": "rm -rf build"
   }
 }

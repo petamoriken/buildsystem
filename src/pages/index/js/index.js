@@ -1,5 +1,5 @@
 const Vue = require("vue");
-const testComponent = require("../../../components/dynamic/test-component.vue");
+const testComponent = require("../../../components/test-component.vue");
 
 //Vue.component("test-component", testComponent);
 
