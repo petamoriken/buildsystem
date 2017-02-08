@@ -18,6 +18,18 @@ const envify = require("envify/custom");
 const source = require("vinyl-source-stream");
 const buffer = require("vinyl-buffer");
 
+// notifier
+const notifier = require("node-notifier")
+function errorHandler(error) {
+    console.log("bang!\n\n\n");
+    notifier.notify({
+        message: error.message,
+        title: error.plugin,
+        sound: "Glass"
+    });
+    this.emit("end");
+}
+
 // setting
 if(!process.env.NODE_ENV) process.env.NODE_ENV = "development";
 const target = process.env.NODE_ENV === "production" ? "release" : "debug";
@@ -28,7 +40,8 @@ const countries = ["ja", "en"];
 // html_ja, html_en
 for(const country of countries) {
     gulp.task(`html_${ country }`, () => {
-        return gulp.src("src/pages/**/*.ejs")
+        return gulp.src("src/pages/*/*.ejs")
+            .pipe($.plumber(errorHandler))
             .pipe($.foreach((stream, file) => {
                 const base = path.dirname(file.path);
                 file.base = base;
@@ -61,6 +74,7 @@ for(const country of countries) {
         });
 
         return gulp.src("src/pages/*/js/*.js")
+            .pipe($.plumber(errorHandler))
             .pipe($.foreach((stream, file) => {
                 const filePath = file.path;
 
@@ -88,16 +102,42 @@ gulp.task("js", gulp.parallel( ...countries.map(val => `js_${ val }`) ));
 gulp.task("css", async () => {
     const postcssConfig = await fetchPostcssConfig();
 
-    let stream = gulp.src("src/pages/*/css/*.css")
+    let stream = gulp.src("src/pages/*/css/*.css")  
+        .pipe($.plumber(errorHandler))
         .pipe($.postcss(postcssConfig.plugins))
         .pipe($.flatten());
     
     for(const country of countries) {
         stream = stream.pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "." : country }/css`));
     }
+
+    return stream;
+});
+
+
+
+gulp.task("img", () => {
+    let stream = gulp.src("src/img/**")
+        .pipe($.plumber(errorHandler));
+
+    for(const country of countries) {
+        stream = stream.pipe(gulp.dest(`build/${ target }/${ country === "ja" ? "." : country }/img`));
+    }
+
+    return stream;
+});
+
+
+
+// watch
+gulp.task("watch", () => {
+    gulp.watch(["src/pages/*/*.ejs", "src/pages/*/*.json"], gulp.parallel("html"));
+    gulp.watch(["src/pages/*/js/*.js", "src/components/*.vue"], gulp.parallel("js"));
+    gulp.watch(["src/base/*.css", "src/setting/*.css", "src/pages/*/css/*.css"], gulp.parallel("css"));
+    gulp.watch(["src/img/**"], gulp.parallel("img"));
 });
 
 
 
 // all build
-gulp.task("default", gulp.parallel("html", "js", "css"));
+gulp.task("default", gulp.parallel("html", "js", "css", "img"));

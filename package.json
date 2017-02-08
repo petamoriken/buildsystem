@@ -20,12 +20,16 @@
     "gulp-if": "^2.0.2",
     "gulp-load-plugins": "^1.4.0",
     "gulp-optimize-js": "^1.1.0",
+    "gulp-plumber": "^1.1.0",
     "gulp-postcss": "^6.2.0",
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
+    "node-notifier": "^5.0.2",
     "postcss-cssnext": "^2.9.0",
+    "postcss-flexbugs-fixes": "^2.1.0",
     "postcss-import": "^9.0.0",
     "postcss-load-plugins": "^2.1.0",
+    "postcss-size": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vue": "^2.1.4",
@@ -37,10 +41,12 @@
   "scripts": {
     "build": "gulp",
     "release": "NODE_ENV=production gulp",
+    "watch": "gulp watch",
     "task": "gulp -T",
     "html": "gulp html",
     "js": "gulp js",
     "css": "gulp css",
+    "img": "gulp img",
     "clean": "rm -rf build"
   }
 }
