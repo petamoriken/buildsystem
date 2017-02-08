@@ -1,6 +1,8 @@
 {
     "plugins": {
         "postcss-import": null,
-        "postcss-cssnext": null
+        "postcss-cssnext": null,
+        "postcss-size": null,
+        "postcss-flexbugs-fixes": null
     }
 }
